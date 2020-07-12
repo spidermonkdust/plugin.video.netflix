@@ -756,9 +756,7 @@ msgctxt "#30190"
 msgid "TV show"
 msgstr ""
 
-msgctxt "#30191"
-msgid "Do you want to export NFO files for the {} added to 'My List'?"
-msgstr ""
+# Unused 30191
 
 msgctxt "#30192"
 msgid "\r\nThese files are used by the provider information scrapers to integrate movies and tv shows info, useful with bonus episodes or director's cut"
