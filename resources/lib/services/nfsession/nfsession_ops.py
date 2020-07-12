@@ -9,6 +9,8 @@
 """
 from __future__ import absolute_import, division, unicode_literals
 
+import time
+
 import resources.lib.api.website as website
 import resources.lib.common as common
 from resources.lib.api.exceptions import (NotLoggedInError, MissingCredentialsError, WebsiteParsingError,
@@ -61,7 +63,6 @@ class NFSessionOperations(SessionPathRequests):
         if self.is_profile_session_active and guid == current_active_guid:
             common.info('The profile session of guid {} is still active, activation not needed.', guid)
             return
-        import time
         timestamp = time.time()
         common.info('Activating profile {}', guid)
         # 20/05/2020 - The method 1 not more working for switching PIN locked profiles
@@ -129,7 +130,8 @@ class NFSessionOperations(SessionPathRequests):
     @common.time_execution(immediate=True)
     def get_metadata(self, videoid, refresh=False):
         """Retrieve additional metadata for the given VideoId"""
-        videoid = common.VideoId.from_path(videoid)
+        if isinstance(videoid, list):  # IPC call send the videoid as "path" list
+            videoid = common.VideoId.from_path(videoid)
         metadata_data = {}, None
         # Get the parent VideoId (when the 'videoid' is a type of EPISODE/SEASON)
         parent_videoid = videoid.derive_parent(common.VideoId.SHOW)
@@ -162,11 +164,9 @@ class NFSessionOperations(SessionPathRequests):
     @cache_utils.cache_output(cache_utils.CACHE_METADATA, identify_from_kwarg_name='video_id')
     def _metadata(self, video_id):
         """Retrieve additional metadata for a video.
-        This is a separate method from get_metadata(videoid) to work around caching issues
+        This is a separate method from get_metadata() to work around caching issues
         when new episodes are added to a tv show by Netflix."""
-        import time
         common.debug('Requesting metadata for {}', video_id)
-        # Always use params 'movieid' to all videoid identifier
         metadata_data = self.get_safe(endpoint='metadata',
                                       data={'movieid': video_id.value,
                                             '_': int(time.time() * 1000)})

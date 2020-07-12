@@ -15,6 +15,7 @@ from functools import wraps
 
 from resources.lib import common
 from resources.lib.api.paths import PATH_REQUEST_SIZE_STD
+from resources.lib.database.db_utils import VidLibProp
 from resources.lib.globals import g
 from resources.lib.kodi import nfo
 
@@ -126,12 +127,12 @@ def request_upd_kodi_library_decorator(func):
 
 def is_show_excluded_from_auto_update(videoid):
     """Return true if the videoid is excluded from auto-update"""
-    return g.SHARED_DB.get_tvshow_property(videoid.value, common.VidLibProp['exclude_update'], False)
+    return g.SHARED_DB.get_tvshow_property(videoid.value, VidLibProp['exclude_update'], False)
 
 
 def set_show_excluded_from_auto_update(videoid, is_excluded):
     """Set if a tvshow is excluded from auto-update"""
-    g.SHARED_DB.set_tvshow_property(videoid.value, common.VidLibProp['exclude_update'], is_excluded)
+    g.SHARED_DB.set_tvshow_property(videoid.value, VidLibProp['exclude_update'], is_excluded)
 
 
 def list_contents(perpetual_range_start):

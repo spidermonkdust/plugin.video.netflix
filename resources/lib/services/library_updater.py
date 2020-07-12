@@ -17,7 +17,7 @@ import xbmc
 from resources.lib.globals import g
 import resources.lib.common as common
 import resources.lib.kodi.library as kodi_library
-from resources.lib.kodi.library_autoupdate import auto_update_library
+from resources.lib.kodi.library_utils import get_library_path
 
 try:  # Kodi >= 19
     from xbmcvfs import makeLegalFilename  # pylint: disable=ungrouped-imports
@@ -116,10 +116,7 @@ class LibraryUpdateService(xbmc.Monitor):
         if not self.scan_in_progress:
             common.debug('Kodi library update requested from library auto-update')
             self.scan_awaiting = False
-            common.scan_library(
-                makeLegalFilename(
-                    xbmc.translatePath(
-                        kodi_library.library_path())))
+            common.scan_library(makeLegalFilename(xbmc.translatePath(get_library_path())))
         else:
             self.scan_awaiting = True
 

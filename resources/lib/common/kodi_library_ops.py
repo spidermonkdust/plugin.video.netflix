@@ -9,18 +9,14 @@
 """
 from __future__ import absolute_import, division, unicode_literals
 
-import json
 import os
 
 import xbmc
 
 from resources.lib.globals import g
-from .logging import debug, warn
 from .kodi_ops import json_rpc, get_local_string
+from .logging import debug, warn
 from .videoid import VideoId
-from resources.lib.api.paths import PATH_REQUEST_SIZE_STD
-from .misc_utils import chunked_list
-from ..database.db_utils import VidLibProp
 
 try:  # Kodi >= 19
     from xbmcvfs import makeLegalFilename  # pylint: disable=ungrouped-imports

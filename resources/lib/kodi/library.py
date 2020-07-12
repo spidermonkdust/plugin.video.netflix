@@ -10,14 +10,15 @@
 """
 from __future__ import absolute_import, division, unicode_literals
 
-from future.utils import iteritems
-
 from datetime import datetime
+
+from future.utils import iteritems
 
 import resources.lib.api.api_requests as api
 import resources.lib.common as common
 import resources.lib.kodi.nfo as nfo
 import resources.lib.kodi.ui as ui
+from resources.lib.database.db_utils import VidLibProp
 from resources.lib.globals import g
 from resources.lib.kodi.library_tasks import LibraryTasks
 from resources.lib.kodi.library_utils import (request_upd_kodi_library, get_library_path,
@@ -197,7 +198,7 @@ class Library(LibraryTasks):
             # Get the exported tvshows (to be updated) as dict: key=videoid value=type of task
             videoids_tasks = {
                 common.VideoId.from_path([common.VideoId.SHOW, videoid_value]): self.export_new_item
-                for videoid_value in g.SHARED_DB.get_tvshows_id_list(common.VidLibProp['exclude_update'], False)
+                for videoid_value in g.SHARED_DB.get_tvshows_id_list(VidLibProp['exclude_update'], False)
             }
 
             if is_sync_with_mylist_enabled:
@@ -247,7 +248,7 @@ class Library(LibraryTasks):
 
     def _update_library(self, videoids_tasks, exp_tvshows_videoids_values, is_silent_mode):
         # Get the exported tvshows, but to be excluded from the updates
-        excluded_videoids_values = g.SHARED_DB.get_tvshows_id_list(common.VidLibProp['exclude_update'], True)
+        excluded_videoids_values = g.SHARED_DB.get_tvshows_id_list(VidLibProp['exclude_update'], True)
         # Start the update operations
         for videoid, task_handler in iteritems(videoids_tasks):
             # Check if current videoid is excluded from updates
@@ -257,7 +258,7 @@ class Library(LibraryTasks):
             if int(videoid.value) in exp_tvshows_videoids_values:
                 # It is possible that the user has chosen not to export NFO files for a tv show
                 nfo_export = g.SHARED_DB.get_tvshow_property(videoid.value,
-                                                             common.VidLibProp['nfo_export'], False)
+                                                             VidLibProp['nfo_export'], False)
                 nfo_settings = nfo.NFOSettings(nfo_export)
             else:
                 nfo_settings = nfo.NFOSettings()

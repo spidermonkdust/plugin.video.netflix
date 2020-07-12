@@ -18,7 +18,7 @@ import resources.lib.kodi.ui as ui
 from resources.lib.common import cache_utils
 from resources.lib.database.db_utils import TABLE_SESSION
 from resources.lib.globals import g
-from .exceptions import APIError, MissingCredentialsError, MetadataNotAvailable, CacheMiss
+from .exceptions import APIError, MissingCredentialsError, CacheMiss
 from .paths import EPISODES_PARTIAL_PATHS, ART_PARTIAL_PATHS, build_paths
 
 
@@ -313,9 +313,9 @@ def remove_watched_status(videoid):
 
 
 def get_metadata(videoid, refresh=False):
-    common.make_call('get_metadata', {'videoid': videoid.to_path(),
-                                      'refresh': refresh})
+    return common.make_call('get_metadata', {'videoid': videoid.to_path(),
+                                             'refresh': refresh})
 
 
 def get_mylist_videoids_profile_switch():
-    common.make_call('get_mylist_videoids_profile_switch')
+    return common.make_call('get_mylist_videoids_profile_switch')
